@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  rapidsai:
+    image: rapidsai/rapidsai:latest
+    runtime: nvidia  # Specify NVIDIA runtime for GPU support
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all  # Utilize all visible NVIDIA GPUs
+    command: ["bash", "-c", "source activate rapids && jupyter lab --ip=0.0.0.0 --port=8888 --allow-root"]
+    ports:
+      - "8888:8888"  # Mapping Jupyter Lab port
+
+    # You might want to mount a volume to access your local files inside the container
+    volumes:
+      - ./notebooks:/rapids/notebooks  # Replace './notebooks' with your local notebook directory
+
+    devices:
+      - /dev/nvidia0:/dev/nvidia0
+      - /dev/nvidiactl:/dev/nvidiactl
+      - /dev/nvidia-modeset:/dev/nvidia-modeset
+      - /dev/nvidia-uvm:/dev/nvidia-uvm
